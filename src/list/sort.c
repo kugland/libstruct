@@ -43,7 +43,7 @@
  * @param n  an integer value
  * @return   the greatest power of two smaller than n
  */
-INLINE static size_t prev_power_2(size_t n)
+INLINE static size_t merge_sort_prev_power_2(size_t n)
 {
 	#if defined(__GNUC__)
 		return 1 << sizeof(size_t) * 8 - __builtin_clz(n - 1) - 1;
@@ -77,7 +77,7 @@ INLINE static size_t prev_power_2(size_t n)
  * @param owner  its owner
  * @param data   its data
  */
-INLINE static void merge_list_node_link(list_node_t* node, list_node_t* next,
+INLINE static void merge_sort_node_link(list_node_t* node, list_node_t* next,
 	list_node_t* prev, list_t* owner, void* data)
 {
 	assert(node != NULL);
@@ -102,7 +102,7 @@ INLINE static void merge_list_node_link(list_node_t* node, list_node_t* next,
  *
  * @param node  node to be unlinked
  */
-INLINE static void merge_list_node_unlink(list_node_t* node)
+INLINE static void merge_sort_node_unlink(list_node_t* node)
 {
 	assert(node->prev != NULL);
 	assert(node->owner->first != node);
@@ -139,7 +139,7 @@ static list_node_t* merge_sort(list_node_t* n1, size_t size,
 
 	if (size > 2) {
 		if ((size > 32) && !optimsize) {
-			s1 = prev_power_2(size);
+			s1 = merge_sort_prev_power_2(size);
 			s2 = size - s1;
 		} else {
 			s2 = size / 2;
@@ -155,8 +155,8 @@ static list_node_t* merge_sort(list_node_t* n1, size_t size,
 					if (likely(n1->next != n2)) {
 						tmp = n2->data;
 						nn = n2->next;
-						merge_list_node_unlink(n2);
-						merge_list_node_link(n2, n1->next, n1,
+						merge_sort_node_unlink(n2);
+						merge_sort_node_link(n2, n1->next, n1,
 							n1->owner, n1->data);
 						n1->data = tmp;
 						n2 = nn;
