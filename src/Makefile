@@ -44,6 +44,7 @@ uninstall:
 	-rm -v $(DESTDIR)/lib/$(subst ../build/,,$(libstruct_OUT))
 
 $(libstruct_OUT): $(list_OBJ)
+	test -d $(BUILD_DIR) || mkdir $(BUILD_DIR)
 	$(AR) rcs $@ $(list_OBJ)
 
 $(depends_OUT):
