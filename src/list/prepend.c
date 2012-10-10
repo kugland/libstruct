@@ -3,9 +3,9 @@
 
 #include <libstruct/list.h>
 
-#include "list_internal.h"
+#include "../common/libstruct_internal.h"
 
-INLINE static void prepend_list_node_create(list_node_t* next, list_t* owner, void* data)
+INLINE static list_t* list_prepend_node_create(list_node_t* next, list_t* owner, void* data)
 {
 	list_node_t* node;
 
@@ -28,11 +28,11 @@ INLINE static void prepend_list_node_create(list_node_t* next, list_t* owner, vo
 		next->prev = node;
 	} else 
 		owner->last = node;
+
+	return owner;
 }
 
 list_t* list_prepend(list_t* list, void* data)
 {
-	prepend_list_node_create(list->first, list, data);
-
-	return list;
+	return list_prepend_node_create(list->first, list, data);
 }

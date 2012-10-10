@@ -3,7 +3,7 @@
 
 #include <libstruct/list.h>
 
-#include "list_internal.h"
+#include "../common/libstruct_internal.h"
 
 list_t* list_clear(list_t* list)
 {

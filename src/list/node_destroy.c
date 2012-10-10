@@ -3,7 +3,7 @@
 
 #include <libstruct/list.h>
 
-#include "list_internal.h"
+#include "../common/libstruct_internal.h"
 
 void list_node_destroy(list_node_t* node)
 {

@@ -3,7 +3,7 @@
 
 #include <libstruct/list.h>
 
-#include "list_internal.h"
+#include "../common/libstruct_internal.h"
 
 list_node_t* list_node_create(list_node_t* next, list_node_t* prev, list_t* owner, void* data)
 {

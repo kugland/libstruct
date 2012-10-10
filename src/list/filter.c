@@ -3,7 +3,7 @@
 
 #include <libstruct/list.h>
 
-#include "list_internal.h"
+#include "../common/libstruct_internal.h"
 
 list_t* list_filter(list_t* list, int (*func)(void*, void*), void* context)
 {
