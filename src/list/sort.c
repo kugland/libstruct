@@ -150,7 +150,7 @@ static list_node_t* merge_sort(list_node_t* n1, size_t size,
 		n3 = merge_sort(n2, s2, cmp, 0);
 
 		if (cmp(n2->prev->data, n2->data) > 0) {
-			while (likely((n1 != n2) && (n2 != n3))) {
+			while (likely(n1 != n2 && n2 != n3)) {
 				if (cmp(n1->data, n2->data) > 0) {
 					if (likely(n1->next != n2)) {
 						tmp = n2->data;
