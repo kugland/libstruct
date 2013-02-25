@@ -1,6 +1,8 @@
 #ifndef LIBSTRUCT_INTERNAL_H_INCLUDED_36EF7D89_5C11_4BC9_9B6B_C4F281F032BE
 #define LIBSTRUCT_INTERNAL_H_INCLUDED_36EF7D89_5C11_4BC9_9B6B_C4F281F032BE
 
+#pragma once
+
 #ifdef __GNUC__
 #define likely(x)       __builtin_expect((x),1)
 #define unlikely(x)     __builtin_expect((x),0)
