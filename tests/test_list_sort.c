@@ -1,21 +1,14 @@
 #include <assert.h>
 #include <stdio.h>
-#include <windows.h>
 #include <time.h>
 
-#if defined(_MSC_VER)
-#include <crtdbg.h>
-#else
-#define _CrtSetDbgFlag(x)
-#endif
-
-#include "list/list.h"
+#include <libstruct/list.h>
 
 unsigned cn, mn;
 
-unsigned short rnd16(void) { return rand() & 0xffff; }
-unsigned int rnd(void) { return (rnd16() << 16) | rnd16(); }
-int cf(const void* a, const void* b) { return ((int)a) - ((int)b); }
+static unsigned short rnd16(void) { return rand() & 0xffff; }
+static unsigned int rnd(void) { return (rnd16() << 16) | rnd16(); }
+static int cf(const void* a, const void* b) { return ((int)a) - ((int)b); }
 
 void test_sort(size_t sz)
 {
@@ -65,7 +58,7 @@ int main(int argc, char* argv[])
 
 	srand(time(NULL));
 
-	for (i = 100000; i < 300000; i++)
+	for (i = 1000; i < 300000; i++)
 		test_sort(i);
 	getchar();
 
