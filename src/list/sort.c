@@ -7,12 +7,12 @@
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-  
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-  
+
     You should have received a copy of the GNU General Public License along
     with this program; if not, write the Free Software Foundation, Inc., 51
     Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <limits.h>
 
 #if defined(_MSC_VER)
 #  include <intrin.h>
@@ -32,7 +33,7 @@
 #endif
 
 #include <libstruct/list.h>
-    
+
 #include "../common/libstruct_internal.h"
 
 /**
@@ -46,7 +47,7 @@
 INLINE static size_t merge_sort_prev_power_2(size_t n)
 {
 	#if defined(__GNUC__)
-		return 1 << sizeof(size_t) * 8 - __builtin_clz(n - 1) - 1;
+		return (1l << sizeof(n) * 8 - __builtin_clzl(n - 1l) - 1l) & LONG_MAX;
 	#elif defined(_MSC_VER)
 		unsigned long t;
 		#if !defined(_WIN64)
@@ -56,13 +57,15 @@ INLINE static size_t merge_sort_prev_power_2(size_t n)
 		#endif
 		return 1 << t;
 	#else
-		size_t i;
-
 		n--;
-		for (i = 1; i < (sizeof(size_t) * 8); i <<= 1)
-			n |= n >> i;
-
-		return (n + 1) >> 1;
+		n |= n >> 1;
+		n |= n >> 2;
+		n |= n >> 4;
+		n |= n >> 8;
+		if (sizeof(n) >= 4) n |= n >> 16;
+		if (sizeof(n) >= 8) n |= n >> 32;
+		n++;
+		return n >> 1;
 	#endif
 }
 
@@ -147,7 +150,7 @@ static list_node_t* merge_sort(list_node_t* n1, size_t size,
 		}
 
 		n2 = merge_sort(n1, s1, cmp, 1);
-		n3 = merge_sort(n2, s2, cmp, 0);
+		n3 = merge_sort(n2, s2, cmp, optimsize);
 
 		if (cmp(n2->prev->data, n2->data) > 0) {
 			while (likely(n1 != n2 && n2 != n3)) {
@@ -156,8 +159,7 @@ static list_node_t* merge_sort(list_node_t* n1, size_t size,
 						tmp = n2->data;
 						nn = n2->next;
 						merge_sort_node_unlink(n2);
-						merge_sort_node_link(n2, n1->next, n1,
-							n1->owner, n1->data);
+						merge_sort_node_link(n2, n1->next, n1, n1->owner, n1->data);
 						n1->data = tmp;
 						n2 = nn;
 						n1 = n1->next;
