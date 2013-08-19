@@ -159,9 +159,8 @@ static list_node_t* merge_sort(list_node_t* n1, size_t size,
 				n2->data = tmp;
 			}
 			return n3;
-		} else if (size == 1) {
+		} else if (size == 1)
 			return n1->next;
-		}
 	}
 
 	return NULL;
