@@ -18,20 +18,7 @@
     Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <assert.h>
-#include <limits.h>
-
-#if defined(_MSC_VER)
-#  include <intrin.h>
-#  if !defined(_WIN64)
-#    pragma intrinsic(_BitScanReverse)
-#  else
-#    pragma intrinsic(_BitScanReverse64)
-#  endif
-#endif
-
 #include <libstruct/list.h>
 
 #include "../common/libstruct_internal.h"
@@ -46,27 +33,15 @@
  */
 INLINE static size_t merge_sort_prev_power_2(size_t n)
 {
-	#if defined(__GNUC__)
-		return (1l << sizeof(n) * 8 - __builtin_clzl(n - 1l) - 1l) & LONG_MAX;
-	#elif defined(_MSC_VER)
-		unsigned long t;
-		#if !defined(_WIN64)
-			_BitScanReverse(&t, n - 1);
-		#else
-			_BitScanReverse64(&t, n - 1);
-		#endif
-		return 1 << t;
-	#else
-		n--;
-		n |= n >> 1;
-		n |= n >> 2;
-		n |= n >> 4;
-		n |= n >> 8;
-		if (sizeof(n) >= 4) n |= n >> 16;
-		if (sizeof(n) >= 8) n |= n >> 32;
-		n++;
-		return n >> 1;
-	#endif
+	n--;
+	n |= n >> 1;
+	n |= n >> 2;
+	n |= n >> 4;
+	n |= n >> 8;
+	if (sizeof(n) >= 4) n |= n >> 16;
+	if (sizeof(n) >= 8) n |= n >> 32;
+	n++;
+	return n >> 1;
 }
 
 /**
